@@ -23,6 +23,7 @@ dependencies = [
     "pydantic-settings>=2.14.0",
     "pynput>=1.8.1",
     "xlib>=0.21",
+    "zeroconf>=0.148.0",
 ]
 
 [dependency-groups]

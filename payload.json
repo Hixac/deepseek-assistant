@@ -1,6 +1,6 @@
 {
     "new_chat": false,
     "expert_mode": true,
-    "msg": "write lexer in rust",
+    "msg": "make it even faster",
     "rules": "response in only code"
 }
