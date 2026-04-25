@@ -1,14 +1,18 @@
 from pathlib import Path
 
+from pydantic import FilePath
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    COPY_BUTTON: Path
-    EXPERT_BUTTON: Path
-    INSTANT_BUTTON: Path
-    MESSAGE_FIELD: Path
-    SUBMIT_MESSAGE_BUTTON: Path
+    COPY_BUTTON: FilePath
+    EXPERT_BUTTON: FilePath
+    INSTANT_BUTTON: FilePath
+    MESSAGE_FIELD: FilePath
+    SUBMIT_MESSAGE_BUTTON: FilePath
+
+    HOST: str = "0.0.0.0"
+    PORT: int = 12345
 
     model_config = SettingsConfigDict(
             env_file=Path(__file__).parent.parent.joinpath(".env"),
