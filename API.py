@@ -1,3 +1,4 @@
+import sys
 import json
 import socket as sockt
 from socket import socket as Socket
@@ -22,12 +23,17 @@ class API:
         return server_socket.recv(4096).decode("utf-8")
 
 
-def send_some_data() -> None:
+def send_some_data(data: dict[Any, Any]) -> None:
     api = API(input("IP: "))
-    print(api.send_data({
-        "msg": "kek",
-        "rules": "lol"
-    }))
+    print(api.send_data(data))
 
 
-send_some_data()
+if len(sys.argv) == 2:
+    if not sys.argv[1].endswith(".json"):
+        print("wrong format")
+        exit(1)
+
+    with open(sys.argv[1]) as f:
+        data = f.read()
+
+    send_some_data(json.loads(data))

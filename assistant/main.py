@@ -9,15 +9,21 @@ while True:
         data = server.wait_for_data()
         if data is not None:
             with DeepseekInput() as input:
-                input.create_new_chat()
+                if data.new_chat:
+                    input.create_new_chat()
+                    if data.expert_mode:
+                        _ = input.expert_mode()
+                else:
+                    input._switch_to_desktop(2)
+
                 _ = input.message_field()
-                input.submit_prompt(data)
+                input.submit_prompt(data.get_query())
                 _ = input.submit_message_field()
 
                 sleeped = 0
-                while sleeped < 60:
+                while sleeped < 120:
                     copied = input.copy()
-                    if copied is not None:
+                    if copied is not None and len(copied) > 0:
                         server.answer(copied)
                         break
                     sleep(1)

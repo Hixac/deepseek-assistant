@@ -4,7 +4,7 @@ from typing import Self
 
 from pynput.mouse import Button, Controller as MouseController
 from pynput.keyboard import Key, Controller as KeyboardController
-from pyclip import paste as paste_buffer
+from pyclip import paste as paste_buffer, clear as clear_buffer
 
 from assistant.utility import locate_on_screen
 from assistant.config import settings
@@ -14,6 +14,7 @@ class DeepseekInput:
     def __init__(self) -> None:
         self.mouse = MouseController()
         self.keyboard = KeyboardController()
+        _ = clear_buffer()
 
     def _switch_to_desktop(self, tag: int) -> None:
         _ = subprocess.run(

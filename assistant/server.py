@@ -1,21 +1,23 @@
-from collections.abc import Callable, Generator
+from collections.abc import Generator
 from contextlib import contextmanager
 import json
 import socket as sockt
 from socket import socket as Socket
+from typing import Any
 
+from assistant.schemas import Protocol
 from assistant.config import settings
 
 
 class Server:
-    def raw_data(self) -> str | None:
+    def raw_data(self) -> Protocol | None:
         return self.data
 
     def get_guest_socket(self) -> Socket | None:
         return self.guest_socket
 
     def __init__(self) -> None:
-        self.data: str | None = None
+        self.data: Protocol | None = None
         self.guest_socket: Socket | None = None
 
         self.socket = Socket(sockt.AF_INET, sockt.SOCK_STREAM)
@@ -38,11 +40,8 @@ class Server:
         try:
             data = conn.recv(4096).decode('utf-8')
             req = json.loads(data)
-            if "msg" not in req:
-                return self.panic("No msg key in json data!", conn)
-            if "rules" not in req:
-                return self.panic("No rules key in json data!", conn)
-            self.data = data
+
+            self.data = Protocol.model_validate(req)
         except ConnectionRefusedError:
             print("Server is not running or IP/port is wrong")
         except Exception as e:
@@ -65,7 +64,7 @@ class StupidServer:
     def __init__(self, server: Server) -> None:
         self.server = server
 
-    def wait_for_data(self) -> str | None:
+    def wait_for_data(self) -> Protocol | None:
         self.server.wait_for_data()
         return self.server.raw_data()
 

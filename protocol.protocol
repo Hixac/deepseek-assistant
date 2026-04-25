@@ -1,0 +1,8 @@
+{
+    "new_chat": [bool? = true],
+    "expert_mode": [bool? = false],
+
+    "msg": [string],
+    "rules": [string?],
+    "context": [string?],
+}
