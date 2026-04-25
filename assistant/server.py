@@ -1,3 +1,5 @@
+from collections.abc import Callable, Generator
+from contextlib import contextmanager
 import json
 import socket as sockt
 from socket import socket as Socket
@@ -6,7 +8,16 @@ from assistant.config import settings
 
 
 class Server:
+    def raw_data(self) -> str | None:
+        return self.data
+
+    def get_guest_socket(self) -> Socket | None:
+        return self.guest_socket
+
     def __init__(self) -> None:
+        self.data: str | None = None
+        self.guest_socket: Socket | None = None
+
         self.socket = Socket(sockt.AF_INET, sockt.SOCK_STREAM)
         self.socket.setsockopt(sockt.SOL_SOCKET, sockt.SO_REUSEADDR, 1)
 
@@ -31,19 +42,41 @@ class Server:
                 return self.panic("No msg key in json data!", conn)
             if "rules" not in req:
                 return self.panic("No rules key in json data!", conn)
+            self.data = data
         except ConnectionRefusedError:
             print("Server is not running or IP/port is wrong")
         except Exception as e:
             print(f"Client error: {e}")
-        conn.close()
+        self.guest_socket = conn
+
+    def answer(self, msg: str) -> None:
+        guest_socket = self.get_guest_socket()
+        if guest_socket is not None:
+            guest_socket.sendall(msg.encode("utf-8"))
+            guest_socket.close()
 
     def close(self) -> None:
+        if (guest_socket := self.get_guest_socket()) is not None:
+            guest_socket.close()
         self.socket.close()
 
 
-def listen_for_data() -> None:
+class StupidServer:
+    def __init__(self, server: Server) -> None:
+        self.server = server
+
+    def wait_for_data(self) -> str | None:
+        self.server.wait_for_data()
+        return self.server.raw_data()
+
+    def answer(self, msg: str) -> None:
+        self.server.answer(msg)
+
+
+@contextmanager
+def listen_for_data() -> Generator[StupidServer]:
     server = Server()
     server.listen()
     server.print_myself()
-    server.wait_for_data()
+    yield StupidServer(server)
     server.close()

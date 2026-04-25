@@ -24,7 +24,10 @@ class API:
 
 def send_some_data() -> None:
     api = API(input("IP: "))
-    print(api.send_data({"lol": "kek"}))
+    print(api.send_data({
+        "msg": "kek",
+        "rules": "lol"
+    }))
 
 
 send_some_data()
