@@ -19,6 +19,7 @@ class DeepseekInput:
         )
 
     def create_new_chat(self) -> None:
+        self._switch_to_desktop(2)
         with self.keyboard.pressed(Key.ctrl):
             self.keyboard.press('j')
             self.keyboard.release('j')
