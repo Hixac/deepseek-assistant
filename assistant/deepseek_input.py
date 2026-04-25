@@ -29,6 +29,7 @@ class DeepseekInput:
         with self.keyboard.pressed(Key.ctrl):
             self.keyboard.press('j')
             self.keyboard.release('j')
+        sleep(1)  # wait for the browser to process it
 
     def submit_prompt(self, message: str) -> None:
         self.keyboard.type(message)

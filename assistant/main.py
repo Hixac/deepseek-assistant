@@ -1,3 +1,5 @@
+from time import sleep
+
 from assistant.deepseek_input import DeepseekInput
 from assistant.server import listen_for_data
 
@@ -12,6 +14,11 @@ while True:
                 input.submit_prompt(data)
                 _ = input.submit_message_field()
 
-                copied = input.copy()
-                if copied is not None:
-                    server.answer(copied)
+                sleeped = 0
+                while sleeped < 60:
+                    copied = input.copy()
+                    if copied is not None:
+                        server.answer(copied)
+                        break
+                    sleep(1)
+                    sleeped += 1
