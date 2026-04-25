@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 packages = ["src"]
 
 [tool.poe.tasks]
-dev = "uv run src/main.py"
+dev = "uv run assistant/main.py"
 
 [project]
 name = "deepseek-automizer"
@@ -26,7 +26,7 @@ dev = [
 ]
 
 [tool.basedpyright]
-include = ["src"]
+include = ["assistant"]
 exclude = ["**/__pycache__"]
 
 typeCheckingMode = "recommended"
